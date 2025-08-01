@@ -2,7 +2,12 @@
   <div class="register-container">
     <div class="register-card">
       <div class="register-header">
-        <h1>Sistema de Pedidos de Viagem</h1>
+        <div class="logo-section">
+          <div class="logo-icon">
+            <img src="/logo.png" alt="Onfly Logo" class="logo-img">
+          </div>
+          <h1>Onfly</h1>
+        </div>
         <p>Crie sua conta para acessar o sistema</p>
       </div>
 
@@ -10,66 +15,87 @@
         ref="registerForm"
         :model="form"
         :rules="rules"
-        label-width="0"
+        class="modern-form"
         @submit.prevent="handleRegister"
       >
-        <el-form-item prop="name">
+        <div class="form-group">
+          <label class="form-label">Nome Completo</label>
           <el-input
             v-model="form.name"
-            placeholder="Nome completo"
+            placeholder="Digite seu nome completo"
             size="large"
-            prefix-icon="User"
-          />
-        </el-form-item>
+            class="modern-input"
+          >
+            <template #prefix>
+              <el-icon><User /></el-icon>
+            </template>
+          </el-input>
+        </div>
 
-        <el-form-item prop="email">
+        <div class="form-group">
+          <label class="form-label">Email</label>
           <el-input
             v-model="form.email"
-            placeholder="Email"
+            placeholder="Digite seu email"
             type="email"
             size="large"
-            prefix-icon="Message"
-          />
-        </el-form-item>
+            class="modern-input"
+          >
+            <template #prefix>
+              <el-icon><Message /></el-icon>
+            </template>
+          </el-input>
+        </div>
 
-        <el-form-item prop="password">
+        <div class="form-group">
+          <label class="form-label">Senha</label>
           <el-input
             v-model="form.password"
-            placeholder="Senha"
+            placeholder="Digite sua senha"
             type="password"
             size="large"
-            prefix-icon="Lock"
+            class="modern-input"
             show-password
-          />
-        </el-form-item>
+          >
+            <template #prefix>
+              <el-icon><Lock /></el-icon>
+            </template>
+          </el-input>
+        </div>
 
-        <el-form-item prop="password_confirmation">
+        <div class="form-group">
+          <label class="form-label">Confirmar Senha</label>
           <el-input
             v-model="form.password_confirmation"
-            placeholder="Confirmar senha"
+            placeholder="Confirme sua senha"
             type="password"
             size="large"
-            prefix-icon="Lock"
+            class="modern-input"
             show-password
-          />
-        </el-form-item>
+          >
+            <template #prefix>
+              <el-icon><Lock /></el-icon>
+            </template>
+          </el-input>
+        </div>
 
-        <el-form-item>
+        <div class="form-group">
           <el-button
             type="primary"
             size="large"
             :loading="loading"
             @click="handleRegister"
-            style="width: 100%"
+            class="submit-btn"
           >
-            Criar Conta
+            <el-icon><Plus /></el-icon>
+            <span class="button-text">Criar Conta</span>
           </el-button>
-        </el-form-item>
+        </div>
 
         <div class="login-link">
           <p>
             Já tem uma conta?
-            <el-button type="text" @click="$router.push('/login')">
+            <el-button type="text" @click="$router.push('/login')" class="link-btn">
               Faça login
             </el-button>
           </p>
@@ -84,9 +110,16 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { ElMessage } from 'element-plus'
+import { User, Message, Lock, Plus } from '@element-plus/icons-vue'
 
 export default {
   name: 'Register',
+  components: {
+    User,
+    Message,
+    Lock,
+    Plus
+  },
   setup() {
     const router = useRouter()
     const authStore = useAuthStore()
@@ -164,41 +197,220 @@ export default {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #667eea 0%, #4facfe 100%);
+  position: relative;
+}
+
+.register-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.02)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  pointer-events: none;
 }
 
 .register-card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  padding: 40px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
+  padding: 48px;
   width: 100%;
-  max-width: 400px;
+  max-width: 600px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.register-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #4facfe 50%, #667eea 100%);
 }
 
 .register-header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
+}
+
+.logo-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.logo-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, #667eea 0%, #4facfe 100%);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+  overflow: hidden;
+  padding: 0;
+}
+
+.logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
 }
 
 .register-header h1 {
   color: #2c3e50;
-  margin-bottom: 10px;
-  font-size: 24px;
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .register-header p {
-  color: #7f8c8d;
+  color: #6c757d;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.modern-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-weight: 700;
+  color: #2c3e50;
   font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+  margin-left: 5px;
+}
+
+.modern-input .el-input__wrapper {
+  border-radius: 12px;
+  border: 2px solid rgba(102, 126, 234, 0.1);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.modern-input .el-input__wrapper:hover {
+  border-color: #667eea;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
+}
+
+.modern-input .el-input__wrapper.is-focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #667eea 0%, #4facfe 100%);
+  border: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.submit-btn:hover::before {
+  left: 100%;
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.4);
+}
+
+.submit-btn .el-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.submit-btn .button-text {
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .login-link {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 8px;
 }
 
 .login-link p {
-  color: #7f8c8d;
+  color: #6c757d;
   font-size: 14px;
+  margin: 0;
+}
+
+.link-btn {
+  color: #667eea;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.link-btn:hover {
+  color: #5a6fd8;
+  transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .register-card {
+    margin: 20px;
+    padding: 32px;
+  }
+  
+  .register-header h1 {
+    font-size: 24px;
+  }
+  
+  .logo-icon {
+    width: 56px;
+    height: 56px;
+  }
 }
 </style> 

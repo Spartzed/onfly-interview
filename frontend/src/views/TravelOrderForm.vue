@@ -26,7 +26,23 @@
               </el-form-item>
 
               <el-form-item label="Destino" prop="destination">
-                <el-input v-model="form.destination" placeholder="Ex: São Paulo, SP" />
+                <el-input
+                  v-model="form.destination"
+                  placeholder="Digite o destino da viagem"
+                  style="width: 100%"
+                />
+              </el-form-item>
+
+              <el-form-item label="Status" prop="status">
+                <el-select 
+                  v-model="form.status" 
+                  placeholder="Selecione o status"
+                  style="width: 100%"
+                >
+                  <el-option label="Solicitado" value="requested" />
+                  <el-option label="Aprovado" value="approved" />
+                  <el-option label="Cancelado" value="cancelled" />
+                </el-select>
               </el-form-item>
 
               <el-form-item label="Data de Ida" prop="departure_date">
@@ -36,6 +52,9 @@
                   placeholder="Selecione a data de ida"
                   style="width: 100%"
                   :disabled-date="disabledDate"
+                  format="DD/MM/YYYY"
+                  value-format="YYYY-MM-DD"
+                  placement="bottom-start"
                 />
               </el-form-item>
 
@@ -46,6 +65,9 @@
                   placeholder="Selecione a data de volta"
                   style="width: 100%"
                   :disabled-date="disabledDate"
+                  format="DD/MM/YYYY"
+                  value-format="YYYY-MM-DD"
+                  placement="bottom-start"
                 />
               </el-form-item>
 
@@ -90,6 +112,7 @@ export default {
     const form = reactive({
       requester_name: '',
       destination: '',
+      status: 'requested',
       departure_date: '',
       return_date: ''
     })
@@ -100,6 +123,9 @@ export default {
       ],
       destination: [
         { required: true, message: 'Destino é obrigatório', trigger: 'blur' }
+      ],
+      status: [
+        { required: true, message: 'Status é obrigatório', trigger: 'change' }
       ],
       departure_date: [
         { required: true, message: 'Data de ida é obrigatória', trigger: 'change' }
@@ -200,5 +226,41 @@ export default {
 
 .form-card {
   margin-top: 20px;
+}
+
+.el-form-item {
+  margin-bottom: 20px;
+}
+
+.el-form-item__label {
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 8px;
+}
+
+/* Estilo para inputs e selects */
+.el-input .el-input__wrapper,
+.el-select .el-input__wrapper,
+.el-select__wrapper {
+  border-radius: 6px;
+  border: 2px solid rgba(102, 126, 234, 0.1);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.el-input .el-input__wrapper:hover,
+.el-select .el-input__wrapper:hover,
+.el-select__wrapper:hover {
+  border-color: #667eea;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
+}
+
+.el-input .el-input__wrapper.is-focus,
+.el-select .el-input__wrapper.is-focus,
+.el-select__wrapper.is-focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
 }
 </style> 
