@@ -1,0 +1,204 @@
+<template>
+  <div class="register-container">
+    <div class="register-card">
+      <div class="register-header">
+        <h1>Sistema de Pedidos de Viagem</h1>
+        <p>Crie sua conta para acessar o sistema</p>
+      </div>
+
+      <el-form
+        ref="registerForm"
+        :model="form"
+        :rules="rules"
+        label-width="0"
+        @submit.prevent="handleRegister"
+      >
+        <el-form-item prop="name">
+          <el-input
+            v-model="form.name"
+            placeholder="Nome completo"
+            size="large"
+            prefix-icon="User"
+          />
+        </el-form-item>
+
+        <el-form-item prop="email">
+          <el-input
+            v-model="form.email"
+            placeholder="Email"
+            type="email"
+            size="large"
+            prefix-icon="Message"
+          />
+        </el-form-item>
+
+        <el-form-item prop="password">
+          <el-input
+            v-model="form.password"
+            placeholder="Senha"
+            type="password"
+            size="large"
+            prefix-icon="Lock"
+            show-password
+          />
+        </el-form-item>
+
+        <el-form-item prop="password_confirmation">
+          <el-input
+            v-model="form.password_confirmation"
+            placeholder="Confirmar senha"
+            type="password"
+            size="large"
+            prefix-icon="Lock"
+            show-password
+          />
+        </el-form-item>
+
+        <el-form-item>
+          <el-button
+            type="primary"
+            size="large"
+            :loading="loading"
+            @click="handleRegister"
+            style="width: 100%"
+          >
+            Criar Conta
+          </el-button>
+        </el-form-item>
+
+        <div class="login-link">
+          <p>
+            Já tem uma conta?
+            <el-button type="text" @click="$router.push('/login')">
+              Faça login
+            </el-button>
+          </p>
+        </div>
+      </el-form>
+    </div>
+  </div>
+</template>
+
+<script>
+import { ref, reactive } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+import { ElMessage } from 'element-plus'
+
+export default {
+  name: 'Register',
+  setup() {
+    const router = useRouter()
+    const authStore = useAuthStore()
+    
+    const registerForm = ref(null)
+    const loading = ref(false)
+
+    const form = reactive({
+      name: '',
+      email: '',
+      password: '',
+      password_confirmation: ''
+    })
+
+    const rules = {
+      name: [
+        { required: true, message: 'Nome é obrigatório', trigger: 'blur' },
+        { min: 2, message: 'Nome deve ter pelo menos 2 caracteres', trigger: 'blur' }
+      ],
+      email: [
+        { required: true, message: 'Email é obrigatório', trigger: 'blur' },
+        { type: 'email', message: 'Email inválido', trigger: 'blur' }
+      ],
+      password: [
+        { required: true, message: 'Senha é obrigatória', trigger: 'blur' },
+        { min: 8, message: 'Senha deve ter pelo menos 8 caracteres', trigger: 'blur' }
+      ],
+      password_confirmation: [
+        { required: true, message: 'Confirmação de senha é obrigatória', trigger: 'blur' },
+        {
+          validator: (rule, value, callback) => {
+            if (value !== form.password) {
+              callback(new Error('Senhas não coincidem'))
+            } else {
+              callback()
+            }
+          },
+          trigger: 'blur'
+        }
+      ]
+    }
+
+    const handleRegister = async () => {
+      if (!registerForm.value) return
+      
+      const valid = await registerForm.value.validate()
+      if (!valid) return
+
+      loading.value = true
+      const result = await authStore.register(form)
+      loading.value = false
+
+      if (result.success) {
+        ElMessage.success('Conta criada com sucesso!')
+        router.push('/dashboard')
+      } else {
+        ElMessage.error(result.message)
+      }
+    }
+
+    return {
+      form,
+      rules,
+      loading,
+      registerForm,
+      handleRegister
+    }
+  }
+}
+</script>
+
+<style scoped>
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.register-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.register-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.register-header h1 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+  font-size: 24px;
+}
+
+.register-header p {
+  color: #7f8c8d;
+  font-size: 14px;
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.login-link p {
+  color: #7f8c8d;
+  font-size: 14px;
+}
+</style> 
