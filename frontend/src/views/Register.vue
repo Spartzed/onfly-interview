@@ -95,7 +95,7 @@
         <div class="login-link">
           <p>
             Já tem uma conta?
-            <el-button type="text" @click="$router.push('/login')" class="link-btn">
+            <el-button link @click="$router.push('/login')" class="link-btn">
               Faça login
             </el-button>
           </p>

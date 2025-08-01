@@ -3,6 +3,7 @@ import { useAuthStore } from '@/stores/auth'
 import Login from '@/views/Login.vue'
 import Register from '@/views/Register.vue'
 import Dashboard from '@/views/Dashboard.vue'
+import DashboardStats from '@/views/DashboardStats.vue'
 import TravelOrderForm from '@/views/TravelOrderForm.vue'
 
 const routes = [
@@ -26,6 +27,12 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/stats',
+    name: 'DashboardStats',
+    component: DashboardStats,
     meta: { requiresAuth: true }
   },
   {

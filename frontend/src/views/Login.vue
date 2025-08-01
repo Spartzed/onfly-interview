@@ -65,8 +65,8 @@
         <div class="register-link">
           <p>
             Não tem uma conta?
-            <el-button type="text" @click="$router.push('/register')" class="link-btn">
-              Registre-se
+            <el-button link @click="$router.push('/register')" class="link-btn">
+             Registre-se
             </el-button>
           </p>
         </div>

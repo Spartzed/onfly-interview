@@ -9,7 +9,7 @@
       <template #reference>
         <el-badge :value="unreadCount" :hidden="unreadCount === 0" class="notification-badge">
           <el-button
-            type="text"
+            link
             class="notification-button"
             :class="{ 'has-notifications': unreadCount > 0 }"
           >
@@ -31,7 +31,7 @@
         </div>
         <el-button
           v-if="notifications.length > 0"
-          type="text"
+          link
           size="small"
           @click="markAllAsRead"
           class="mark-all-read-btn"
@@ -82,7 +82,7 @@
       </div>
 
       <div v-if="notifications.length > 0" class="notification-footer">
-        <el-button type="text" size="small" @click="viewAllNotifications" class="view-all-btn">
+        <el-button link size="small" @click="viewAllNotifications" class="view-all-btn">
           Ver todas
         </el-button>
       </div>

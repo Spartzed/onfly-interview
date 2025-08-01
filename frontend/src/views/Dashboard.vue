@@ -22,7 +22,7 @@
                 <span class="user-role">{{ authStore.user?.role === 'admin' ? 'Administrador' : 'Usuário' }}</span>
               </div>
               <el-dropdown @command="handleUserAction">
-                <el-button type="text" class="user-menu-button">
+                <el-button link class="user-menu-button">
                   <el-icon><ArrowDown /></el-icon>
                 </el-button>
                 <template #dropdown>
@@ -75,6 +75,14 @@
                 >
                   <el-icon><Plus /></el-icon>
                   <span class="button-text">Novo Pedido</span>
+                </el-button>
+                <el-button 
+                  type="info" 
+                  @click="goToStats"
+                  class="action-button stats-btn"
+                >
+                  <el-icon><DataAnalysis /></el-icon>
+                  <span class="button-text">Estatísticas</span>
                 </el-button>
               </div>
             </div>
@@ -195,7 +203,7 @@
                       title="Rejeitar"
                       class="action-btn reject-btn"
                     >
-                      <el-icon><Delete /></el-icon>
+                      <el-icon><Close /></el-icon>
                     </el-button>
                     
                     <!-- Botão Cancelar (apenas usuário comum) -->
@@ -208,7 +216,7 @@
                       title="Cancelar"
                       class="action-btn cancel-btn"
                     >
-                      <el-icon><Delete /></el-icon>
+                      <el-icon><Close /></el-icon>
                     </el-button>
                   </div>
                 </template>
@@ -324,12 +332,15 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useTravelOrdersStore } from '@/stores/travelOrders'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Check, Close, Plus, Refresh, SwitchButton, ArrowDown, User, Setting, Location, Document, Select, Delete } from '@element-plus/icons-vue'
+import { Check, Close, Plus, Refresh, SwitchButton, ArrowDown, User, Setting, Location, Document, Select, Delete, DataAnalysis } from '@element-plus/icons-vue'
 import NotificationBell from '@/components/NotificationBell.vue'
 import dayjs from 'dayjs'
 
 export default {
   name: 'Dashboard',
+  components: {
+    NotificationBell
+  },
   setup() {
     const router = useRouter()
     const authStore = useAuthStore()
@@ -487,6 +498,10 @@ export default {
       router.push('/login')
     }
 
+    const goToStats = () => {
+      router.push('/stats')
+    }
+
     onMounted(() => {
       travelOrdersStore.fetchTravelOrders()
     })
@@ -509,7 +524,8 @@ export default {
       cancelOrder,
       handleCreateOrder,
       handleUserAction,
-      handleLogout
+      handleLogout,
+      goToStats
     }
   }
 }
@@ -645,6 +661,54 @@ export default {
   transform: scale(1.1);
 }
 
+.header-actions {
+  display: flex;
+  gap: 16px;
+}
+
+.modern-button {
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  border: none;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #667eea 0%, #4facfe 100%);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+  color: white;
+}
+
+.modern-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.4);
+}
+
+.modern-button .el-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.modern-button .button-text {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.secondary {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  box-shadow: 0 8px 24px rgba(79, 162, 254, 0.3);
+  color: white;
+}
+
+.secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(79, 162, 254, 0.4);
+}
+
 .container {
   max-width: 1400px;
   margin: 0 auto;
@@ -778,6 +842,17 @@ export default {
 .create-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 12px 32px rgba(103, 194, 58, 0.4);
+}
+
+.stats-btn {
+  background: linear-gradient(135deg, #909399 0%, #c0c4cc 100%);
+  box-shadow: 0 8px 24px rgba(144, 147, 153, 0.3);
+  color: white;
+}
+
+.stats-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(144, 147, 153, 0.4);
 }
 
 .filters-content {
