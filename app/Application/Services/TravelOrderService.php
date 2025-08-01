@@ -7,6 +7,7 @@ use App\Domain\TravelOrder\Enums\TravelOrderStatus;
 use App\Domain\TravelOrder\Repositories\TravelOrderRepositoryInterface;
 use App\Domain\User\Entities\User;
 use App\Application\Services\ResponseService;
+use App\Application\Services\NotificationService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
@@ -15,7 +16,8 @@ class TravelOrderService
 {
     public function __construct(
         private TravelOrderRepositoryInterface $repository,
-        private ResponseService $responseService
+        private ResponseService $responseService,
+        private NotificationService $notificationService
     ) {}
 
     public function createTravelOrder(array $data, User $user): TravelOrder
@@ -104,8 +106,11 @@ class TravelOrderService
             throw new \Exception('Você não tem permissão para alterar o status deste pedido.');
         }
 
-        $oldStatus = $travelOrder->status;
         $travelOrder->updateStatus($newStatus);
+        $travelOrder->refresh();
+
+        $action = $newStatus === TravelOrderStatus::APPROVED ? 'approved' : 'rejected';
+        $this->notificationService->createTravelOrderNotification($travelOrder, $action);
 
         return true;
     }
@@ -116,15 +121,14 @@ class TravelOrderService
             throw new \Exception('Você não tem permissão para cancelar este pedido.');
         }
 
-        // Debug: verificar o status atual
-        $currentStatus = $travelOrder->status;
-        $requestedStatus = TravelOrderStatus::REQUESTED;
-        
-        if ($currentStatus !== $requestedStatus) {
-            throw new \Exception('Apenas pedidos solicitados podem ser cancelados. Status atual: ' . $currentStatus->value . ', Esperado: ' . $requestedStatus->value);
+        if ($travelOrder->status !== TravelOrderStatus::REQUESTED) {
+            throw new \Exception('Apenas pedidos solicitados podem ser cancelados.');
         }
 
         $travelOrder->updateStatus(TravelOrderStatus::CANCELLED);
+
+        // Criar notificação de cancelamento
+        $this->notificationService->createTravelOrderNotification($travelOrder, 'cancelled');
 
         return true;
     }

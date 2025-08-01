@@ -91,11 +91,12 @@
 </template>
 
 <script>
-import { ref, computed, onMounted } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
 import { Bell, Check, Close, InfoFilled, SuccessFilled, WarningFilled } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import { useNotificationsStore } from '@/stores/notifications'
 
 dayjs.extend(relativeTime)
 
@@ -110,60 +111,32 @@ export default {
     WarningFilled
   },
   setup() {
-    const notifications = ref([])
-    const loading = ref(false)
+    const notificationsStore = useNotificationsStore()
+    let pollingInterval = null
 
-    const unreadCount = computed(() => {
-      return notifications.value.filter(n => !n.read_at).length
-    })
+    const notifications = computed(() => notificationsStore.notifications)
+    const loading = computed(() => notificationsStore.loading)
+    const unreadCount = computed(() => notificationsStore.unreadCount)
 
-    const fetchNotifications = async () => {
-      try {
-        loading.value = true
-        // Simular notificações por enquanto
-        notifications.value = [
-          {
-            id: 1,
-            type: 'success',
-            data: {
-              title: 'Pedido Aprovado',
-              message: 'Seu pedido de viagem para São Paulo foi aprovado!'
-            },
-            created_at: new Date(Date.now() - 1000 * 60 * 30), // 30 minutos atrás
-            read_at: null
-          },
-          {
-            id: 2,
-            type: 'info',
-            data: {
-              title: 'Novo Sistema',
-              message: 'Bem-vindo ao novo sistema de pedidos de viagem!'
-            },
-            created_at: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 horas atrás
-            read_at: new Date()
-          }
-        ]
-      } catch (error) {
-        ElMessage.error('Erro ao carregar notificações')
-      } finally {
-        loading.value = false
+    const startPolling = () => {
+      pollingInterval = setInterval(() => {
+        notificationsStore.fetchNotifications()
+      }, 30000)
+    }
+
+    const stopPolling = () => {
+      if (pollingInterval) {
+        clearInterval(pollingInterval)
+        pollingInterval = null
       }
     }
 
     const markAsRead = async (notification) => {
-      if (!notification.read_at) {
-        notification.read_at = new Date()
-        // Aqui você faria uma chamada para a API para marcar como lida
-      }
+      await notificationsStore.markAsRead(notification.id)
     }
 
     const markAllAsRead = async () => {
-      notifications.value.forEach(notification => {
-        if (!notification.read_at) {
-          notification.read_at = new Date()
-        }
-      })
-      // Aqui você faria uma chamada para a API para marcar todas como lidas
+      await notificationsStore.markAllAsRead()
     }
 
     const viewAllNotifications = () => {
@@ -196,7 +169,12 @@ export default {
     }
 
     onMounted(() => {
-      fetchNotifications()
+      notificationsStore.fetchNotifications()
+      startPolling()
+    })
+
+    onUnmounted(() => {
+      stopPolling()
     })
 
     return {

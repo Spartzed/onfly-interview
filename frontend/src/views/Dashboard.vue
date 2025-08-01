@@ -263,20 +263,7 @@
           </div>
         </div>
         
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Status</label>
-            <el-select 
-              v-model="createFormData.status" 
-              placeholder="Selecione o status"
-              class="modern-select"
-            >
-              <el-option label="Solicitado" value="requested" />
-              <el-option label="Aprovado" value="approved" />
-              <el-option label="Cancelado" value="cancelled" />
-            </el-select>
-          </div>
-        </div>
+
         
         <div class="form-row dates-row">
           <div class="form-group">
@@ -359,7 +346,6 @@ export default {
     const createFormData = reactive({
       requester_name: '',
       destination: '',
-      status: 'requested', // Default status
       departure_date: '',
       return_date: ''
     })
@@ -371,9 +357,7 @@ export default {
       destination: [
         { required: true, message: 'Destino é obrigatório', trigger: 'blur' }
       ],
-      status: [
-        { required: true, message: 'Status é obrigatório', trigger: 'change' }
-      ],
+
       departure_date: [
         { required: true, message: 'Data de ida é obrigatória', trigger: 'change' }
       ],
@@ -466,7 +450,6 @@ export default {
         Object.assign(createFormData, {
           requester_name: '',
           destination: '',
-          status: 'requested', // Reset status
           departure_date: '',
           return_date: ''
         })
