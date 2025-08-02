@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import Login from '@/views/Login.vue'
-import Register from '@/views/Register.vue'
-import Dashboard from '@/views/Dashboard.vue'
-import DashboardStats from '@/views/DashboardStats.vue'
-import TravelOrderForm from '@/views/TravelOrderForm.vue'
+import Login from '@/views/login/Login.vue'
+import Register from '@/views/register/Register.vue'
+import Dashboard from '@/views/dashboard/Dashboard.vue'
+import DashboardStats from '@/views/dashboardStats/DashboardStats.vue'
+import TravelOrderForm from '@/views/travelOrderForm/TravelOrderForm.vue'
 
 const routes = [
   {
