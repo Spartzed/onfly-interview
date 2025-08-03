@@ -60,38 +60,54 @@
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue'
+<script>
 import { useRouter } from 'vue-router'
-import { useTravelOrdersStore } from '../../stores/travelOrders'
+import { useTravelOrdersStore } from '@/stores/travelOrders'
 import { Refresh, ArrowLeft, DataAnalysis } from '@element-plus/icons-vue'
 import DashboardStats from '@/components/DashboardStats.vue'
 
-const router = useRouter()
-const travelOrdersStore = useTravelOrdersStore()
+export default {
+    name: 'DashboardStatsPage',
 
-const loading = ref(false)
-const orders = ref([])
+    components: {
+        DashboardStats
+    },
 
-const refreshStats = async () => {
-  loading.value = true
-  try {
-    await travelOrdersStore.fetchTravelOrders()
-    orders.value = travelOrdersStore.travelOrders
-  } catch (error) {
-    console.error('Erro ao carregar estatísticas:', error)
-  } finally {
-    loading.value = false
-  }
+    setup() {
+        const router = useRouter()
+        const travelOrdersStore = useTravelOrdersStore()
+        return { router, travelOrdersStore }
+    },
+
+    data() {
+        return {
+            loading: false,
+            orders: []
+        }
+    },
+
+    mounted() {
+        this.refreshStats()
+    },
+
+    methods: {
+        async refreshStats() {
+            this.loading = true
+            try {
+                await this.travelOrdersStore.fetchTravelOrders()
+                this.orders = this.travelOrdersStore.travelOrders
+            } catch (error) {
+                console.error('Erro ao carregar estatísticas:', error)
+            } finally {
+                this.loading = false
+            }
+        },
+
+        goBack() {
+            this.router.push('/dashboard')
+        }
+    }
 }
-
-const goBack = () => {
-  router.push('/dashboard')
-}
-
-onMounted(async () => {
-  await refreshStats()
-})
 </script>
 
 <style scoped>

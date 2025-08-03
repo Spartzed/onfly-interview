@@ -122,7 +122,6 @@ const props = defineProps({
   }
 })
 
-// Computed properties para estatísticas
 const totalOrders = computed(() => props.orders.length)
 
 const statusCounts = computed(() => {

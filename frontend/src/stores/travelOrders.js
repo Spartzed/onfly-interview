@@ -15,6 +15,11 @@ export const useTravelOrdersStore = defineStore('travelOrders', () => {
       const params = new URLSearchParams()
       if (filters.status) params.append('status', filters.status)
       if (filters.destination) params.append('destination', filters.destination)
+
+      if (filters.dateRange && Array.isArray(filters.dateRange) && filters.dateRange.length === 2) {
+        params.append('date_range[start]', filters.dateRange[0])
+        params.append('date_range[end]', filters.dateRange[1])
+      }
       
       const response = await api.get(`/travel-orders?${params.toString()}`)
       travelOrders.value = response.data.data

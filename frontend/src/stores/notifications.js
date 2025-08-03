@@ -23,12 +23,10 @@ export const useNotificationsStore = defineStore('notifications', () => {
         const data = await response.json()
         notifications.value = data.notifications || []
       } else {
-        // Se a API não estiver disponível, manter array vazio
         notifications.value = []
       }
     } catch (error) {
       console.error('Erro ao carregar notificações:', error)
-      // Em caso de erro, manter array vazio
       notifications.value = []
     } finally {
       loading.value = false
@@ -53,7 +51,6 @@ export const useNotificationsStore = defineStore('notifications', () => {
       }
     } catch (error) {
       console.error('Erro ao marcar notificação como lida:', error)
-      // Fallback local
       const notification = notifications.value.find(n => n.id === notificationId)
       if (notification) {
         notification.read_at = new Date()
@@ -80,7 +77,6 @@ export const useNotificationsStore = defineStore('notifications', () => {
       }
     } catch (error) {
       console.error('Erro ao marcar todas como lidas:', error)
-      // Fallback local
       notifications.value.forEach(notification => {
         if (!notification.read_at) {
           notification.read_at = new Date()
@@ -113,12 +109,6 @@ export const useNotificationsStore = defineStore('notifications', () => {
     }
   }
 
-  const addNotification = (notification) => {
-    // Não criar notificações simuladas no frontend
-    // As notificações devem vir apenas do backend
-    console.log('Notificação recebida do backend:', notification)
-  }
-
   return {
     notifications,
     loading,
@@ -126,7 +116,6 @@ export const useNotificationsStore = defineStore('notifications', () => {
     fetchNotifications,
     markAsRead,
     markAllAsRead,
-    createNotification,
-    addNotification
+    createNotification
   }
 }) 

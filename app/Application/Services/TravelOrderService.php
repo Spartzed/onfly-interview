@@ -8,6 +8,7 @@ use App\Domain\TravelOrder\Repositories\TravelOrderRepositoryInterface;
 use App\Domain\User\Entities\User;
 use App\Application\Services\ResponseService;
 use App\Application\Services\NotificationService;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
@@ -72,11 +73,27 @@ class TravelOrderService
         if (isset($filters['date_range'])) {
             $travelOrders = $travelOrders->filter(function ($order) use ($filters) {
                 $departureDate = $order->departure_date;
+                $returnDate = $order->return_date;
                 $startDate = $filters['date_range']['start'] ?? null;
                 $endDate = $filters['date_range']['end'] ?? null;
-                
-                if ($startDate && $departureDate < $startDate) return false;
-                if ($endDate && $departureDate > $endDate) return false;
+
+                if ($startDate) {
+                    $startDate = Carbon::parse($startDate)->startOfDay();
+                }
+                if ($endDate) {
+                    $endDate = Carbon::parse($endDate)->endOfDay();
+                }
+
+                if ($startDate && $departureDate->lt($startDate)) {
+                    return false;
+                }
+                if ($endDate && $departureDate->gt($endDate)) {
+                    return false;
+                }
+
+                if ($endDate && $returnDate->gt($endDate)) {
+                    return false;
+                }
                 
                 return true;
             });
@@ -127,7 +144,6 @@ class TravelOrderService
 
         $travelOrder->updateStatus(TravelOrderStatus::CANCELLED);
 
-        // Criar notificação de cancelamento
         $this->notificationService->createTravelOrderNotification($travelOrder, 'cancelled');
 
         return true;
