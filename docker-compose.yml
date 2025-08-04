@@ -1,5 +1,5 @@
 services:
-    laravel:
+    backend:
         build:
             context: './vendor/laravel/sail/runtimes/8.4'
             dockerfile: Dockerfile
@@ -37,7 +37,7 @@ services:
         networks:
             - sail
         depends_on:
-            - laravel
+            - backend
     mysql:
         image: 'mysql/mysql-server:8.0'
         ports:

@@ -82,11 +82,28 @@ cp .env.example .env
 
 Edite o arquivo `.env` com as seguintes configurações:
 ```env
-APP_NAME="Sistema de Pedidos de Viagem"
+APP_NAME=Onfly
 APP_ENV=local
 APP_KEY=
 APP_DEBUG=true
 APP_URL=http://localhost
+APP_SERVICE=backend
+
+APP_LOCALE=en
+APP_FALLBACK_LOCALE=en
+APP_FAKER_LOCALE=en_US
+
+APP_MAINTENANCE_DRIVER=file
+# APP_MAINTENANCE_STORE=database
+
+PHP_CLI_SERVER_WORKERS=4
+
+BCRYPT_ROUNDS=12
+
+LOG_CHANNEL=stack
+LOG_STACK=single
+LOG_DEPRECATIONS_CHANNEL=null
+LOG_LEVEL=debug
 
 DB_CONNECTION=mysql
 DB_HOST=mysql
@@ -95,54 +112,68 @@ DB_DATABASE=laravel
 DB_USERNAME=sail
 DB_PASSWORD=password
 
-JWT_SECRET=your-jwt-secret-key
-JWT_TTL=60
-JWT_REFRESH_TTL=20160
+SESSION_DRIVER=database
+SESSION_LIFETIME=120
+SESSION_ENCRYPT=false
+SESSION_PATH=/
+SESSION_DOMAIN=null
+
+BROADCAST_CONNECTION=log
+FILESYSTEM_DISK=local
+QUEUE_CONNECTION=database
+
+CACHE_STORE=database
+
+MEMCACHED_HOST=127.0.0.1
 
 MAIL_MAILER=smtp
+MAIL_SCHEME=null
 MAIL_HOST=mailpit
 MAIL_PORT=1025
 MAIL_USERNAME=null
 MAIL_PASSWORD=null
-MAIL_ENCRYPTION=null
 MAIL_FROM_ADDRESS="hello@example.com"
 MAIL_FROM_NAME="${APP_NAME}"
+
+VITE_APP_NAME="${APP_NAME}"
+
+JWT_SECRET=
 ```
 
-### 3. Execute os containers
+### 3. Instalação das Dependências
+
+#### Opção A: Com PHP 8.4 instalado localmente
 ```bash
-docker-compose up -d
+composer install
 ```
 
-### 4. Instale as dependências do Laravel
+#### Opção B: Sem PHP instalado (usando Docker)
 ```bash
-docker-compose exec laravel composer install
+sudo docker run --rm \
+  -v $(pwd):/opt \
+  -w /opt \
+  laravelsail/php84-composer:latest \
+  composer install
 ```
 
-### 5. Gere a chave da aplicação
+#### Opção extra, definir um alias
 ```bash
-docker-compose exec laravel php artisan key:generate
+echo "alias sail='bash vendor/bin/sail'" >> ~/.bashrc && source ~/.bashrc
 ```
 
-### 6. Execute as migrations
+### 4. Execute os containers
 ```bash
-docker-compose exec laravel php artisan migrate
+sail up -d
 ```
 
-### 7. Execute os seeders
+### 5. Configure a aplicação Laravel
 ```bash
-docker-compose exec laravel php artisan db:seed
-```
+# Gere a chave da aplicação
+sail artisan key:generate
 
-### 8. Instale as dependências do Frontend
-```bash
-cd frontend
-npm install
-```
+# Execute as migrations
+sail artisan jwt:secret
 
-### 9. Execute o frontend
-```bash
-npm run dev
 ```
 
 ## 🌐 Acessos
@@ -167,12 +198,12 @@ npm run dev
 
 ### Executar todos os testes
 ```bash
-docker-compose exec laravel php artisan test
+sail test
 ```
 
 ### Executar testes específicos
 ```bash
-docker-compose exec laravel php artisan test --filter=TravelOrderServiceTest
+sail test --filter=TravelOrderServiceTest
 ```
 
 ## 📚 Documentação da API
@@ -271,19 +302,19 @@ Authorization: Bearer {token}
 #### Laravel
 ```bash
 # Executar migrations
-docker-compose exec laravel php artisan migrate
+sail migrate
 
 # Executar seeders
-docker-compose exec laravel php artisan db:seed
+sail db:seed
 
 # Limpar cache
-docker-compose exec laravel php artisan cache:clear
+sail cache:clear
 
 # Gerar chave JWT
-docker-compose exec laravel php artisan jwt:secret
+sail jwt:secret
 
 # Rodar a fila de email
-docker-compose exec laravel php artisan queue:work
+sail queue:work
 ```
 
 #### Frontend
