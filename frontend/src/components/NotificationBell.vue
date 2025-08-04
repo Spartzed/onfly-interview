@@ -36,7 +36,7 @@
           @click="markAllAsRead"
           class="mark-all-read-btn"
         >
-          Marcar todas como lidas
+          <span class="mark-all-read-btn-text">Marcar todas como lidas</span>
         </el-button>
       </div>
 
@@ -283,7 +283,7 @@ export default {
 
 .mark-all-read-btn {
   color: rgba(255, 255, 255, 0.8);
-  font-size: 12px;
+  font-size: 8px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;

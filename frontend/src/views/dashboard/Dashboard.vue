@@ -127,7 +127,7 @@
                   range-separator="até"
                   start-placeholder="Data inicial"
                   end-placeholder="Data final"
-                  class="filter-date-picker"
+                  class="filter-date-picker modern-date-picker"
                   clearable
                   @change="handleFilterChange"
                   format="DD/MM/YYYY"

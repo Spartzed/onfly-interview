@@ -8,7 +8,6 @@ Uma aplicação Full Stack completa para gerenciamento de pedidos de viagem corp
 - **Laravel 12** - Framework PHP
 - **JWT Auth** - Autenticação com tokens JWT
 - **MySQL** - Banco de dados
-- **Redis** - Cache e filas
 - **Docker** - Containerização
 
 ### Frontend

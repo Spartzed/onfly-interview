@@ -22,7 +22,7 @@ class TravelOrderStoreRequest extends BaseRequest
         'destination.max' => 'O campo destino não pode ter mais que 255 caracteres.',
         'departure_date.required' => 'O campo data de ida é obrigatório.',
         'departure_date.date' => 'O campo data de ida deve ser uma data válida.',
-        'departure_date.after' => 'A data de ida deve ser posterior a hoje.',
+        'departure_date.after_or_equal' => 'A data de ida deve ser hoje ou posterior a hoje.',
         'return_date.required' => 'O campo data de volta é obrigatório.',
         'return_date.date' => 'O campo data de volta deve ser uma data válida.',
         'return_date.after' => 'A data de volta deve ser posterior à data de ida.',
@@ -33,7 +33,7 @@ class TravelOrderStoreRequest extends BaseRequest
         return [
             'requester_name' => 'required|string|max:255',
             'destination' => 'required|string|max:255',
-            'departure_date' => 'required|date|after:today',
+            'departure_date' => 'required|date|after_or_equal:today',
             'return_date' => 'required|date|after:departure_date',
         ];
     }
