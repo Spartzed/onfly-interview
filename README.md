@@ -71,7 +71,7 @@ app/
 
 ### 1. Clone o repositório
 ```bash
-git clone <url-do-repositorio>
+git clone git@github.com:Spartzed/onfly-interview.git
 cd onfly-interview
 ```
 
@@ -329,18 +329,6 @@ npm run preview
 - [x] Configuração de ambiente
 - [x] Documentação completa
 - [x] Estrutura organizada
-
-## 🤝 Contribuição
-
-1. Faça um fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
-
-## 📄 Licença
-
-Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
 
 ## 👨‍💻 Autor
 
