@@ -27,14 +27,6 @@
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item command="profile">
-                      <el-icon><User /></el-icon>
-                      Perfil
-                    </el-dropdown-item>
-                    <el-dropdown-item command="settings">
-                      <el-icon><Setting /></el-icon>
-                      Configurações
-                    </el-dropdown-item>
                     <el-dropdown-item divided command="logout">
                       <el-icon><SwitchButton /></el-icon>
                       Sair
