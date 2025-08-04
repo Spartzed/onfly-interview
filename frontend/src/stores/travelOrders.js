@@ -102,6 +102,30 @@ export const useTravelOrdersStore = defineStore('travelOrders', () => {
     createTravelOrder,
     updateTravelOrderStatus,
     cancelTravelOrder,
-    getTravelOrderById
+    getTravelOrderById,
+    updateTravelOrder
   }
-}) 
+})
+
+async function updateTravelOrder(id, orderData) {
+    this.loading = true;
+    this.error = null;
+    
+    try {
+        const response = await api.put(`/travel-orders/${id}`, orderData);
+        const updatedOrder = response.data.data;
+        
+        const index = this.travelOrders.findIndex(order => order.id === id);
+        if (index !== -1) {
+            this.travelOrders[index] = updatedOrder;
+        }
+        
+        return { success: true, data: updatedOrder };
+    } catch (err) {
+        this.error = err.response?.data?.message || 'Erro ao atualizar pedido';
+        return { success: false, message: this.error };
+    } finally {
+        this.loading = false;
+    }
+}
+ 

@@ -117,22 +117,22 @@ docker-compose up -d
 
 ### 4. Instale as dependências do Laravel
 ```bash
-docker-compose exec laravel.test composer install
+docker-compose exec laravel composer install
 ```
 
 ### 5. Gere a chave da aplicação
 ```bash
-docker-compose exec laravel.test php artisan key:generate
+docker-compose exec laravel php artisan key:generate
 ```
 
 ### 6. Execute as migrations
 ```bash
-docker-compose exec laravel.test php artisan migrate
+docker-compose exec laravel php artisan migrate
 ```
 
 ### 7. Execute os seeders
 ```bash
-docker-compose exec laravel.test php artisan db:seed
+docker-compose exec laravel php artisan db:seed
 ```
 
 ### 8. Instale as dependências do Frontend
@@ -151,7 +151,6 @@ npm run dev
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost/api
 - **Mailpit (Emails)**: http://localhost:8025
-- **Meilisearch**: http://localhost:7700
 
 ## 👥 Usuários Padrão
 
@@ -169,12 +168,12 @@ npm run dev
 
 ### Executar todos os testes
 ```bash
-docker-compose exec laravel.test php artisan test
+docker-compose exec laravel php artisan test
 ```
 
 ### Executar testes específicos
 ```bash
-docker-compose exec laravel.test php artisan test --filter=TravelOrderServiceTest
+docker-compose exec laravel php artisan test --filter=TravelOrderServiceTest
 ```
 
 ## 📚 Documentação da API
@@ -273,16 +272,19 @@ Authorization: Bearer {token}
 #### Laravel
 ```bash
 # Executar migrations
-docker-compose exec laravel.test php artisan migrate
+docker-compose exec laravel php artisan migrate
 
 # Executar seeders
-docker-compose exec laravel.test php artisan db:seed
+docker-compose exec laravel php artisan db:seed
 
 # Limpar cache
-docker-compose exec laravel.test php artisan cache:clear
+docker-compose exec laravel php artisan cache:clear
 
 # Gerar chave JWT
-docker-compose exec laravel.test php artisan jwt:secret
+docker-compose exec laravel php artisan jwt:secret
+
+# Rodar a fila de email
+docker-compose exec laravel php artisan queue:work
 ```
 
 #### Frontend

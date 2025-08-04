@@ -6,6 +6,8 @@ use App\Application\Services\TravelOrderService;
 use App\Domain\TravelOrder\Entities\TravelOrder;
 use App\Domain\TravelOrder\Enums\TravelOrderStatus;
 use App\Domain\TravelOrder\Repositories\TravelOrderRepositoryInterface;
+use App\Application\Services\ResponseService;
+use App\Application\Services\NotificationService;
 use App\Domain\User\Entities\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -18,12 +20,20 @@ class TravelOrderServiceTest extends TestCase
 
     private TravelOrderService $service;
     private $mockRepository;
+    private $mockResponseService;
+    private $mockNotificationService;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->mockRepository = Mockery::mock(TravelOrderRepositoryInterface::class);
-        $this->service = new TravelOrderService($this->mockRepository);
+        $this->mockResponseService = Mockery::mock(ResponseService::class);
+        $this->mockNotificationService = Mockery::mock(NotificationService::class);
+        $this->service = new TravelOrderService(
+            $this->mockRepository,
+            $this->mockResponseService,
+            $this->mockNotificationService
+        );
     }
 
     public function test_create_travel_order()

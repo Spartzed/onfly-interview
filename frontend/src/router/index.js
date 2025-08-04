@@ -33,7 +33,7 @@ const routes = [
     path: '/stats',
     name: 'DashboardStats',
     component: DashboardStats,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, requiresAdmin: true }
   },
   {
     path: '/travel-order/new',
@@ -60,6 +60,8 @@ router.beforeEach((to, from, next) => {
 
   if (to.meta.requiresAuth && !isAuthenticated) {
     next('/login')
+  } else if (to.meta.requiresAdmin && !authStore.isAdmin) {
+    next('/dashboard')
   } else if (to.meta.requiresGuest && isAuthenticated) {
     next('/dashboard')
   } else {

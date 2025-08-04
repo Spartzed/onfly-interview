@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\TravelOrderController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\DashboardStatsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,7 @@ Route::middleware('auth:api')->group(function () {
     Route::prefix('travel-orders')->group(function () {
         Route::get('/', [TravelOrderController::class, 'index']);
         Route::post('/', [TravelOrderController::class, 'store']);
+        Route::put('/{id}', [TravelOrderController::class, 'update']);
         Route::get('/{id}', [TravelOrderController::class, 'show']);
         Route::patch('/{id}/status', [TravelOrderController::class, 'updateStatus']);
         Route::delete('/{id}', [TravelOrderController::class, 'cancel']);
@@ -41,5 +43,9 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/unread-count', [NotificationController::class, 'unreadCount']);
         Route::post('/{id}/read', [NotificationController::class, 'markAsRead']);
         Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead']);
+    });
+
+    Route::prefix('stats')->middleware('admin')->group(function () {
+        Route::get('/', [DashboardStatsController::class, 'index']);
     });
 }); 

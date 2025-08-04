@@ -22,7 +22,9 @@ export default {
     data() {
         return {
             showCreateModal: false,
-            creating: false,
+            showEditModal: false,
+            editing: false,
+            currentOrder: null,
             searchTimeout: null,
             filters: {
                 status: '',
@@ -250,6 +252,42 @@ export default {
 
         goToStats() {
             this.$router.push('/stats')
-        }
+        },
+
+        openEditModal(order) {
+            this.currentOrder = { ...order };
+            this.showEditModal = true;
+        },
+
+        async handleUpdateOrder() {
+            if (!this.currentOrder.requester_name || !this.currentOrder.destination ||
+                !this.currentOrder.departure_date || !this.currentOrder.return_date) {
+                ElMessage.error('Por favor, preencha todos os campos obrigatórios');
+                return;
+            }
+
+            if (this.currentOrder.departure_date >= this.currentOrder.return_date) {
+                ElMessage.error('A data de volta deve ser posterior à data de ida');
+                return;
+            }
+
+            try {
+                this.editing = true;
+                const result = await this.travelOrdersStore.updateTravelOrder(this.currentOrder.id, this.currentOrder);
+                this.editing = false;
+
+                if (result.success) {
+                    ElMessage.success('Pedido atualizado com sucesso!');
+                    this.showEditModal = false;
+                    this.travelOrdersStore.fetchTravelOrders(this.filters);
+                } else {
+                    ElMessage.error(result.message || 'Erro ao atualizar pedido');
+                }
+            } catch (error) {
+                console.error('Erro na atualização:', error);
+                this.editing = false;
+                ElMessage.error('Erro ao atualizar pedido: ' + (error.message || 'Erro desconhecido'));
+            }
+        },
     }
 } 

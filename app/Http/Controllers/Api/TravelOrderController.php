@@ -6,6 +6,7 @@ use App\Application\Services\TravelOrderService;
 use App\Domain\TravelOrder\Enums\TravelOrderStatus;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\TravelOrder\TravelOrderStoreRequest;
+use App\Http\Requests\TravelOrder\TravelOrderUpdateRequest;
 use App\Http\Requests\TravelOrder\TravelOrderUpdateStatusRequest;
 use App\Application\Services\AuthService;
 use App\Application\Services\ExceptionHandlerService;
@@ -76,6 +77,16 @@ class TravelOrderController extends BaseController
         return $this->handleRequest(function () use ($orderId) {
             $user = $this->authService->getCurrentUser();
             return $this->travelOrderService->getTravelOrderByOrderIdResponse($orderId, $user);
+        });
+    }
+
+    public function update(TravelOrderUpdateRequest $request, int $id): JsonResponse
+    {
+        return $this->handleRequest(function () use ($request, $id) {
+            $user = $this->authService->getCurrentUser();
+            $data = $request->only(['requester_name', 'destination', 'departure_date', 'return_date']);
+            
+            return $this->travelOrderService->updateTravelOrderResponse($id, $data, $user);
         });
     }
 } 

@@ -230,4 +230,22 @@ class TravelOrderService
 
         return response()->json(['data' => $travelOrder]);
     }
-} 
+
+    public function updateTravelOrderResponse(int $id, array $data, User $user): JsonResponse
+    {
+        $travelOrder = $this->getTravelOrder($id);
+
+        if (!$travelOrder) {
+            return response()->json(['message' => 'Pedido não encontrado'], 404);
+        }
+
+        if (!$travelOrder->canBeUpdatedBy($user)) {
+            return response()->json(['message' => 'Acesso negado'], 403);
+        }
+
+        $travelOrder->update($data);
+
+        return response()->json(['data' => $travelOrder->fresh()]);
+    }
+}
+ 

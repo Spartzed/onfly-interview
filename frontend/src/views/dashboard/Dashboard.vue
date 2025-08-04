@@ -77,6 +77,7 @@
                   <span class="button-text">Novo Pedido</span>
                 </el-button>
                 <el-button 
+                  v-if="authStore.isAdmin"
                   type="info" 
                   @click="goToStats"
                   class="action-button stats-btn"
@@ -180,6 +181,19 @@
               <el-table-column label="Ações" width="150">
                 <template #default="{ row }">
                   <div class="action-buttons">
+                    <!-- Botão Editar -->
+                    <el-button
+                      v-if="row.status === 'requested'"
+                      type="primary"
+                      size="small"
+                      circle
+                      @click="openEditModal(row)"
+                      title="Editar"
+                      class="action-btn edit-btn"
+                    >
+                      <el-icon><Edit /></el-icon>
+                    </el-button>
+
                     <!-- Botão Aprovar (apenas admin) -->
                     <el-button
                       v-if="authStore.isAdmin && row.status === 'requested'"
@@ -305,6 +319,88 @@
             class="submit-btn"
           >
             Criar Pedido
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
+
+    <!-- Modal de Edição de Pedido -->
+    <el-dialog
+      v-model="showEditModal"
+      title="Editar pedido de viagem"
+      width="500px"
+      :close-on-click-modal="false"
+      class="modern-dialog"
+    >
+      <el-form
+        v-if="currentOrder"
+        :model="currentOrder"
+        :rules="createRules"
+        class="modern-form"
+      >
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nome do Solicitante</label>
+            <el-input 
+              v-model="currentOrder.requester_name" 
+              placeholder="Digite o nome completo"
+              class="modern-input"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Destino</label>
+            <el-input 
+              v-model="currentOrder.destination" 
+              placeholder="Digite o destino da viagem"
+              class="modern-input"
+            />
+          </div>
+        </div>
+        
+        <div class="form-row dates-row">
+          <div class="form-group">
+            <label class="form-label">Data de Ida</label>
+            <el-date-picker
+              v-model="currentOrder.departure_date"
+              type="date"
+              placeholder="Selecione a data de ida"
+              class="modern-date-picker"
+              :disabled-date="disablePastDates"
+              format="DD/MM/YYYY"
+              value-format="YYYY-MM-DD"
+              placement="bottom-start"
+            />
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Data de Volta</label>
+            <el-date-picker
+              v-model="currentOrder.return_date"
+              type="date"
+              placeholder="Selecione a data de volta"
+              class="modern-date-picker"
+              :disabled-date="disablePastDates"
+              format="DD/MM/YYYY"
+              value-format="YYYY-MM-DD"
+              placement="bottom-start"
+            />
+          </div>
+        </div>
+      </el-form>
+
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="showEditModal = false" class="cancel-btn">Cancelar</el-button>
+          <el-button
+            type="primary"
+            :loading="editing"
+            @click="handleUpdateOrder"
+            class="submit-btn"
+          >
+            Salvar Alterações
           </el-button>
         </span>
       </template>
