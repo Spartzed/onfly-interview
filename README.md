@@ -138,6 +138,9 @@ MAIL_FROM_NAME="${APP_NAME}"
 VITE_APP_NAME="${APP_NAME}"
 
 JWT_SECRET=
+
+WWWGROUP=1000
+WWWUSER=1000
 ```
 
 ### 3. Instalação das Dependências
