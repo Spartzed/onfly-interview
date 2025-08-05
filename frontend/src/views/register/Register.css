@@ -189,6 +189,9 @@
 .login-link p {
     color: #6c757d;
     font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin: 0;
 }
 

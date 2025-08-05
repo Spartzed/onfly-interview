@@ -181,9 +181,12 @@
     white-space: nowrap;
 }
 
-.register-link {
+.register-link p {
     text-align: center;
     margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .register-link p {

@@ -159,9 +159,12 @@ sudo docker run --rm \
   composer install
 ```
 
-#### Opção extra, definir um alias
+#### Definir um Alais para facilitar
 ```bash
 echo "alias sail='bash vendor/bin/sail'" >> ~/.bashrc && source ~/.bashrc
+
+# Caso não queira definir use substitua sail por vendor/bin/sail
+# vendor/bin/sail sail up -d
 ```
 
 ### 4. Execute os containers
@@ -169,19 +172,25 @@ echo "alias sail='bash vendor/bin/sail'" >> ~/.bashrc && source ~/.bashrc
 sail up -d
 ```
 
-### 5. Configure a aplicação Laravel
+### 5. Permissão de escrita no .env
 ```bash
+sudo chmod 664 .env
+```
+
+### 6. Configure a aplicação Laravel
+```bash
+# Executar migrations
+sail artisan migrate
+
+# Executar seeders
+sail artisan db:seed
+
 # Gere a chave da aplicação
 sail artisan key:generate
 
 # Execute as migrations
 sail artisan jwt:secret
 
-```
-
-### 6. Caso tenha problema de permissão
-```bash
-sudo chmod 664 .env
 ```
 
 ## 🌐 Acessos
@@ -206,12 +215,12 @@ sudo chmod 664 .env
 
 ### Executar todos os testes
 ```bash
-sail test
+sail artisan test
 ```
 
 ### Executar testes específicos
 ```bash
-sail test --filter=TravelOrderServiceTest
+sail artisan test --filter=TravelOrderServiceTest
 ```
 
 ## 📚 Documentação da API

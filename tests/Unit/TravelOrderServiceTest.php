@@ -94,35 +94,23 @@ class TravelOrderServiceTest extends TestCase
 
     public function test_update_travel_order_status_as_admin()
     {
-        $admin = User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-            'password' => bcrypt('password'),
+        $admin = User::factory()->create([
             'role' => 'admin'
         ]);
         
-        $user = User::create([
-            'name' => 'Regular User',
-            'email' => 'user@example.com',
-            'password' => bcrypt('password'),
+        $user = User::factory()->create([
             'role' => 'user'
         ]);
         
-        $travelOrder = TravelOrder::create([
-            'order_id' => 'TO-TEST123',
-            'requester_name' => 'Test User',
-            'destination' => 'São Paulo',
-            'departure_date' => '2024-02-01',
-            'return_date' => '2024-02-05',
-            'status' => TravelOrderStatus::REQUESTED,
+        $travelOrder = TravelOrder::factory()->create([
             'user_id' => $user->id,
+            'status' => TravelOrderStatus::REQUESTED,
         ]);
 
-        $this->mockRepository
-            ->shouldReceive('findById')
+        $this->mockNotificationService
+            ->shouldReceive('createTravelOrderNotification')
             ->once()
-            ->with($travelOrder->id)
-            ->andReturn($travelOrder);
+            ->with($travelOrder, 'approved');
 
         $result = $this->service->updateTravelOrderStatus(
             $travelOrder,
@@ -133,24 +121,24 @@ class TravelOrderServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function test_cannot_update_own_travel_order_status()
+    public function test_regular_user_cannot_update_travel_order_status()
     {
-        $user = User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-            'password' => bcrypt('password'),
+        $regularUser = User::factory()->create([
+            'role' => 'user'
+        ]);
+        
+        $adminUser = User::factory()->create([
             'role' => 'admin'
         ]);
         
-        $travelOrder = TravelOrder::create([
-            'order_id' => 'TO-TEST123',
-            'requester_name' => 'Test User',
-            'destination' => 'São Paulo',
-            'departure_date' => '2024-02-01',
-            'return_date' => '2024-02-05',
+        $travelOrder = TravelOrder::factory()->create([
+            'user_id' => $adminUser->id,
             'status' => TravelOrderStatus::REQUESTED,
-            'user_id' => $user->id,
         ]);
+
+        $this->mockNotificationService
+            ->shouldReceive('createTravelOrderNotification')
+            ->never();
 
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Você não tem permissão para alterar o status deste pedido.');
@@ -158,28 +146,25 @@ class TravelOrderServiceTest extends TestCase
         $this->service->updateTravelOrderStatus(
             $travelOrder,
             TravelOrderStatus::APPROVED,
-            $user
+            $regularUser
         );
     }
 
     public function test_cancel_travel_order()
     {
-        $user = User::create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => bcrypt('password'),
+        $user = User::factory()->create([
             'role' => 'user'
         ]);
         
-        $travelOrder = TravelOrder::create([
-            'order_id' => 'TO-TEST123',
-            'requester_name' => 'Test User',
-            'destination' => 'São Paulo',
-            'departure_date' => '2024-02-01',
-            'return_date' => '2024-02-05',
-            'status' => TravelOrderStatus::REQUESTED,
+        $travelOrder = TravelOrder::factory()->create([
             'user_id' => $user->id,
+            'status' => TravelOrderStatus::REQUESTED,
         ]);
+
+        $this->mockNotificationService
+            ->shouldReceive('createTravelOrderNotification')
+            ->once()
+            ->with($travelOrder, 'cancelled');
 
         $result = $this->service->cancelTravelOrder($travelOrder, $user);
 
@@ -187,23 +172,41 @@ class TravelOrderServiceTest extends TestCase
         $this->assertEquals(TravelOrderStatus::CANCELLED, $travelOrder->status);
     }
 
+    public function test_admin_can_update_own_travel_order_status()
+    {
+        $admin = User::factory()->create([
+            'role' => 'admin'
+        ]);
+        
+        $travelOrder = TravelOrder::factory()->create([
+            'user_id' => $admin->id,
+            'status' => TravelOrderStatus::REQUESTED,
+        ]);
+
+        $this->mockNotificationService
+            ->shouldReceive('createTravelOrderNotification')
+            ->once()
+            ->with($travelOrder, 'approved');
+
+        $result = $this->service->updateTravelOrderStatus(
+            $travelOrder,
+            TravelOrderStatus::APPROVED,
+            $admin
+        );
+
+        $this->assertTrue($result);
+        $this->assertEquals(TravelOrderStatus::APPROVED, $travelOrder->status);
+    }
+
     public function test_cannot_cancel_approved_travel_order()
     {
-        $user = User::create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => bcrypt('password'),
+        $user = User::factory()->create([
             'role' => 'user'
         ]);
         
-        $travelOrder = TravelOrder::create([
-            'order_id' => 'TO-TEST123',
-            'requester_name' => 'Test User',
-            'destination' => 'São Paulo',
-            'departure_date' => '2024-02-01',
-            'return_date' => '2024-02-05',
-            'status' => TravelOrderStatus::APPROVED,
+        $travelOrder = TravelOrder::factory()->create([
             'user_id' => $user->id,
+            'status' => TravelOrderStatus::APPROVED,
         ]);
 
         $this->expectException(\Exception::class);

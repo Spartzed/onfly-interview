@@ -16,7 +16,14 @@ class TravelOrderTest extends TestCase
     public function test_user_can_create_travel_order()
     {
         $user = User::factory()->create();
-        Sanctum::actingAs($user);
+        
+        // Login para obter o token
+        $loginResponse = $this->postJson('/api/auth/login', [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+        
+        $token = $loginResponse->json('access_token');
 
         $orderData = [
             'requester_name' => 'Test User',
@@ -25,12 +32,13 @@ class TravelOrderTest extends TestCase
             'return_date' => now()->addDays(5)->toDateString(),
         ];
 
-        $response = $this->postJson('/api/travel-orders', $orderData);
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->postJson('/api/travel-orders', $orderData);
 
         $response->assertStatus(201)
             ->assertJsonStructure([
-                'message',
-                'travel_order' => [
+                'data' => [
                     'id',
                     'requester_name',
                     'destination',
@@ -48,11 +56,20 @@ class TravelOrderTest extends TestCase
     public function test_user_can_list_travel_orders()
     {
         $user = User::factory()->create();
-        Sanctum::actingAs($user);
+        
+        // Login para obter o token
+        $loginResponse = $this->postJson('/api/auth/login', [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+        
+        $token = $loginResponse->json('access_token');
 
         TravelOrder::factory()->count(3)->create();
 
-        $response = $this->getJson('/api/travel-orders');
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->getJson('/api/travel-orders');
 
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -66,17 +83,32 @@ class TravelOrderTest extends TestCase
                         'status',
                     ],
                 ],
+                'meta' => [
+                    'total',
+                    'user_role',
+                ],
             ]);
     }
 
     public function test_user_can_view_travel_order()
     {
         $user = User::factory()->create();
-        Sanctum::actingAs($user);
+        
+        // Login para obter o token
+        $loginResponse = $this->postJson('/api/auth/login', [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+        
+        $token = $loginResponse->json('access_token');
 
-        $order = TravelOrder::factory()->create();
+        $order = TravelOrder::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
-        $response = $this->getJson("/api/travel-orders/{$order->id}");
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->getJson("/api/travel-orders/{$order->id}");
 
         $response->assertStatus(200)
             ->assertJson([

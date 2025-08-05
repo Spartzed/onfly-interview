@@ -58,4 +58,9 @@ class TravelOrder extends Model
         $this->status = $status;
         $this->save();
     }
+
+    protected static function newFactory()
+    {
+        return \Database\Factories\TravelOrderFactory::new();
+    }
 } 

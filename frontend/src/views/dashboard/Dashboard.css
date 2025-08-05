@@ -195,16 +195,6 @@
     overflow: hidden;
 }
 
-.filters::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #667eea 0%, #4facfe 50%, #667eea 100%);
-}
-
 .filters-header {
     display: flex;
     justify-content: space-between;
@@ -378,16 +368,6 @@
     box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
     position: relative;
-}
-
-.orders-table::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #667eea 0%, #4facfe 50%, #667eea 100%);
 }
 
 .table-header {

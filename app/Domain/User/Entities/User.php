@@ -50,4 +50,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    protected static function newFactory()
+    {
+        return \Database\Factories\UserFactory::new();
+    }
 } 

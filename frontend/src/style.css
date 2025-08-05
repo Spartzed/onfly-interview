@@ -31,16 +31,6 @@ body {
   overflow: hidden;
 }
 
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #667eea 0%, #4facfe 50%, #667eea 100%);
-}
-
 .btn-primary {
   background: linear-gradient(135deg, #409eff 0%, #36a3f7 100%);
   border: none;

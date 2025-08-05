@@ -255,6 +255,7 @@ export default {
   border-bottom: 1px solid rgba(102, 126, 234, 0.1);
   background: linear-gradient(135deg, #667eea 0%, #4facfe 100%);
   color: white;
+  border-radius: 12px;
 }
 
 .header-content {

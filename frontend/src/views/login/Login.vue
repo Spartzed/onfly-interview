@@ -61,10 +61,10 @@
             <span class="button-text">Entrar</span>
           </el-button>
         </div>
-
+        
         <div class="register-link">
           <p>
-            Não tem uma conta?
+            <span>Não tem uma conta?</span>
             <el-button link @click="$router.push('/register')" class="link-btn">
              Registre-se
             </el-button>
