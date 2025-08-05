@@ -13,7 +13,7 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'http://laravel:80',
+        target: 'http://backend:80',
         changeOrigin: true,
       },
     },

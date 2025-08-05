@@ -179,9 +179,14 @@ sail artisan jwt:secret
 
 ```
 
+### 6. Caso tenha problema de permissão
+```bash
+sudo chmod 664 .env
+```
+
 ## 🌐 Acessos
 
-- **Frontend**: http://localhost:3000
+- **Frontend**: http://localhost:3000/login
 - **Backend API**: http://localhost/api
 - **Mailpit (Emails)**: http://localhost:8025
 
