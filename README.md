@@ -163,7 +163,7 @@ sudo docker run --rm \
 ```bash
 echo "alias sail='bash vendor/bin/sail'" >> ~/.bashrc && source ~/.bashrc
 
-# Caso não queira definir use substitua sail por vendor/bin/sail
+# Caso não queira definir substitua sail por vendor/bin/sail
 # vendor/bin/sail sail up -d
 ```
 
