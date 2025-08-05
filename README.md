@@ -310,19 +310,19 @@ Authorization: Bearer {token}
 #### Laravel
 ```bash
 # Executar migrations
-sail migrate
+sail artisan migrate
 
 # Executar seeders
-sail db:seed
+sail artisan db:seed
 
 # Limpar cache
-sail cache:clear
+sail artisan cache:clear
 
 # Gerar chave JWT
-sail jwt:secret
+sail artisan jwt:secret
 
 # Rodar a fila de email
-sail queue:work
+sail artisan queue:work
 ```
 
 #### Frontend
